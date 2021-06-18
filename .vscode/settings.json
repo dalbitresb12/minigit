@@ -3,5 +3,8 @@
     "CMakeLists.txt": "cmake",
     "*.json.example": "jsonc",
     "iostream": "cpp"
+  },
+  "cmake.debugConfig": {
+    "cwd": "${workspaceFolder}"
   }
 }
