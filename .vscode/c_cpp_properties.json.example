@@ -1,0 +1,28 @@
+{
+  // This is a sample configuration file for the C/C++ extension for VS Code, available here:
+  // https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools
+  // The compile configuration is handled by the CMake extension, available here:
+  // https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
+  // For the CMake extension to work, make sure you have installed the language support extension:
+  // https://marketplace.visualstudio.com/items?itemName=twxs.cmake
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": [],
+      "defines": [],
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "linux-gcc-x64",
+      "compilerPath": "/usr/bin/g++",
+      "browse": {
+        "limitSymbolsToIncludedHeaders": true,
+        "path": [
+          "${workspaceFolder}"
+        ]
+      },
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+      "configurationProvider": "ms-vscode.cmake-tools"
+    }
+  ],
+  "version": 4
+}

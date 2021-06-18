@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "CMakeLists.txt": "cmake",
+    "*.json.example": "jsonc",
+    "iostream": "cpp"
+  }
+}
