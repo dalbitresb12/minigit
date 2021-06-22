@@ -12,4 +12,4 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-add_executable(minigit main.cpp)
+add_executable(minigit main.cpp "folder.hpp" "file.hpp")
