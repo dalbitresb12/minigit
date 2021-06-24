@@ -2,16 +2,21 @@
 #include <string>
 using namespace std;
 
-class File abstract {
+enum class FileType {
+  Document,
+  Folder
+};
+
+class File {
+protected:
   string path;
   string name;
   list<File*> versions;
+  File(string name, string path): name(name), path(path){}
 public:
-  string getName() {
-    return name;
+  bool compareName(string name) {
+    return this->name == name;
   }
 
-  virtual bool contains(string name) {
-    return this.name.compare(name);
-  }
+  virtual FileType getFileType() = 0;
 };
