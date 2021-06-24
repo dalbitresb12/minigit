@@ -19,5 +19,9 @@ public:
     //Falta agregar librería para hallar el hash
     return "";
   }
+
+  FileType getFileType() override {
+    return FileType::Document;
+  }
 };
 
