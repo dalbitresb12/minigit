@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize]
 
 env:
-  BUILD_TYPE: Release
+  BUILD_TYPE: RelWithDebInfo
 
 jobs:
   build:
@@ -17,11 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        run: cmake --build ${{ github.workspace }}/build --config ${{ env.BUILD_TYPE }}
       - name: Compress build artifact
-        run: tar -zcvf ${{github.workspace}}/build/minigit.tar.gz -C ${{github.workspace}}/build/ minigit
+        run: tar -zcvf ${{ github.workspace }}/build/minigit.tar.gz -C ${{ github.workspace }}/build/bin/${{ env.BUILD_TYPE }} .
       - name: Get short commit hash
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
@@ -29,4 +29,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: minigit-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ steps.vars.outputs.sha_short }}
-          path: ${{github.workspace}}/build/minigit.tar.gz
+          path: ${{ github.workspace }}/build/minigit.tar.gz
