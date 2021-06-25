@@ -2,7 +2,7 @@
 
 class Document : public File {
 public:
-  Document(string path, string name) : File(path, name) {}
+  Document(string name, string path) : File(name, path) {}
 
   string getExt() {
     fs::path filePath = fs::path(this.path);

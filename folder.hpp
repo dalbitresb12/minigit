@@ -3,7 +3,7 @@
 class Folder : public File {
   list<File*> files;
 public:
-  Folder(string path, string name) : File(path, name) {}
+  Folder(string name, string path) : File(name, path) {}
   File* find(string searchPath) {
     string totalPath = getTotalPath(path, searchPath);
     if (fs::exists(totalPath)) {

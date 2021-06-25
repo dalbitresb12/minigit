@@ -23,4 +23,12 @@ public:
   }
 
   virtual FileType getFileType() = 0;
+
+  string getPath() {
+    return path;
+  }
+
+  string getName() {
+    return name;
+  }
 };
