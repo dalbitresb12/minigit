@@ -1,6 +1,4 @@
 #include <file.hpp>
-#include <filesystem>
-namespace fs = std::filesystem;
 
 class Folder : public File {
   list<File*> files;
@@ -8,7 +6,7 @@ public:
   Folder(string path, string name) : File(path, name) {}
   File* find(string searchPath) {
     string totalPath = getTotalPath(path, searchPath);
-    if (fileExists(totalPath)) {
+    if (fs::exists(totalPath)) {
       string fileName = fs::path(totalPath).filename().generic_u8string();
       // FALTA REEMPLAZAR LA BUSQUEDA FOR POR UNA DE ARBOLES
       for (File* file : files) {
@@ -35,16 +33,8 @@ public:
     return FileType::Folder;
   }
 private:
-  bool fileExists(const fs::path& p, fs::file_status s = fs::file_status {}) {
-    if (fs::status_known(s) ? fs::exists(s) : fs::exists(p)) return true;
-    return false;
-  }
-
   string getTotalPath(string initialPath, string searchPath) {
-    string totalPath = initialPath;
-    totalPath += "/";
-    totalPath += searchPath;
-    return totalPath;
+    return initialPath + "/" + searchPath;
   }
 };
 
