@@ -1,3 +1,4 @@
+#pragma once
 #include <file.hpp>
 
 class Document : public File {
