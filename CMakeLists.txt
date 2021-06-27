@@ -35,11 +35,7 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-find_package(cxxopts CONFIG REQUIRED)
-
 add_executable(minigit main.cpp "folder.hpp" "file.hpp" "document.hpp")
-
-target_link_libraries(minigit PRIVATE cxxopts::cxxopts)
 
 include(CTest)
 enable_testing()
