@@ -35,7 +35,11 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-add_executable(minigit main.cpp "folder.hpp" "file.hpp" "document.hpp" "commit.hpp")
+find_package(OpenSSL REQUIRED)
+
+add_executable(minigit main.cpp "folder.hpp" "file.hpp" "document.hpp" "commit.hpp" "hashgen.hpp")
+  
+target_link_libraries(minigit PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 
 include(CTest)
 enable_testing()

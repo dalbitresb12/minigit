@@ -1,6 +1,9 @@
 #pragma once
 #include "file.hpp"
+
 #include <chrono>
+#include <openssl/sha.h>
+#include "hashgen.hpp"
 
 class Commit {
   //Informacion del usuario
@@ -10,8 +13,8 @@ class Commit {
 public:
   Commit(list<File*> stagingFiles) {
     changes = stagingFiles;
-    timestamp = generateTimestamp(); //UNIX formato 
-    sha1 = hash();
+    timestamp = generateTimestamp(); 
+    sha1 = HashGenerator::hash(changesToStr());
   }
 
   string getDiff() {
@@ -19,7 +22,7 @@ public:
   }
 
   string getSha1() {
-    return "";
+    return sha1;
   }
 
   int getTimestamp() {
@@ -36,7 +39,8 @@ private:
     return chrono::duration_cast<chrono::seconds>(timeNow.time_since_epoch()).count();
   }
 
-  string hash() {
+  string changesToStr() {
+
     return "";
   }
 
