@@ -48,7 +48,6 @@ add_executable(minigit
   "src/stash.hpp"
   "src/branch.hpp"
   "src/branchmanager.hpp"
-  "src/commit.hpp"
 )
 
 include(CTest)
