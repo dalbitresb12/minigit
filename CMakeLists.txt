@@ -35,7 +35,21 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-add_executable(minigit main.cpp "folder.hpp" "file.hpp" "document.hpp" "minigit.hpp" "repository.hpp" "stashmanager.hpp" "stash.hpp" "branch.hpp" "branchmanager.hpp" "commit.hpp")
+add_executable(minigit
+  "src/main.cpp"
+  "src/file.hpp"
+  "src/folder.hpp"
+  "src/document.hpp"
+  "src/avl.hpp"
+  "src/hashtable.hpp"
+  "src/minigit.hpp"
+  "src/repository.hpp"
+  "src/stashmanager.hpp"
+  "src/stash.hpp"
+  "src/branch.hpp"
+  "src/branchmanager.hpp"
+  "src/commit.hpp"
+)
 
 include(CTest)
 enable_testing()
