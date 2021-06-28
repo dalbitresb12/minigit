@@ -35,7 +35,7 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-add_executable(minigit main.cpp "folder.hpp" "file.hpp" "document.hpp")
+add_executable(minigit main.cpp "folder.hpp" "file.hpp" "document.hpp" "minigit.hpp")
 
 include(CTest)
 enable_testing()
