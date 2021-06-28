@@ -35,6 +35,8 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
+find_package(argparse CONFIG REQUIRED)
+
 add_executable(minigit
   "src/main.cpp"
   "src/file.hpp"
@@ -43,6 +45,8 @@ add_executable(minigit
   "src/avl.hpp"
   "src/hashtable.hpp"
 )
+
+target_link_libraries(minigit PRIVATE argparse::argparse)
 
 include(CTest)
 enable_testing()
