@@ -10,8 +10,8 @@ public:
   string config(string key);
   void config(string key, string value);
   void init();
-  void init(string);
-  void clone(string);
+  void init(string path);
+  void clone(string path);
 
 };
 
