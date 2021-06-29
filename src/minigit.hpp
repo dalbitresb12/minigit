@@ -1,6 +1,11 @@
 #pragma once
+
 #include <map>
 #include <string>
+
+using std::map;
+using std::string;
+
 class Minigit {
   map<string, string> configmap;
 
@@ -12,6 +17,4 @@ public:
   void init();
   void init(string path);
   void clone(string path);
-
 };
-

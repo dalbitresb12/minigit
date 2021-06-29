@@ -1,8 +1,21 @@
 #pragma once
+
+#include <string>
+#include <vector>
+
+#include "file.hpp"
+#include "branch.hpp"
+#include "branchmanager.hpp"
+#include "stashmanager.hpp"
+
+  using std::string;
+  using std::vector;
+
 class Repository {
   Branch* branch;
   StashManager* stashmanager;
   BranchManager* branchmanager;
+
 public:
   Repository();
   ~Repository();
@@ -17,8 +30,8 @@ public:
   void hash(string path);
   void show(string hash);
   void rm(string path);
-  void mv(strin from, string to);
-  Stashmanager* stash();
+  void mv(string from, string to);
+  StashManager* stash();
   void branch();
   void branch(string name);
   void checkout(string name, bool create = true);

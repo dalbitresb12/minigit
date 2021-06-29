@@ -1,7 +1,10 @@
-#pragama once
-#include "HashTables.hpp"
+#pragma once
+
+#include "hashtable.hpp"
+#include "stash.hpp"
+
 class StashManager {
-  Hashtable<Stash*> stashes;
+  HashTable<Stash*> stashes;
 
 public:
   StashManager();
