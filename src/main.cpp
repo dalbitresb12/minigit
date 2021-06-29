@@ -4,37 +4,28 @@
 
 using std::string;
 using std::cout;
+using argparse::ArgumentParser;
 
 int main(int argc, char** argv) {
-  argparse::ArgumentParser program("minigit", "0.1.0");
+  ArgumentParser program("minigit", "0.1.0");
 
-  program.add_argument("command")
-    .action([](const string& value) { return value; })
+  program.add_argument<string>("command")
+    .default_value<string>("")
     .help("Execute command");
-  program.add_argument("-v", "--version")
-    .default_value(false)
-    .implicit_value(true)
-    .help("Get program version");
 
   try {
     program.parse_args(argc, argv);
   } catch (const std::runtime_error& err) {
     cout << err.what() << "\n";
-    cout << "parsing error\n";
     return 1;
   }
 
-  if (program.present("--version")) {
-    cout << "v0.1.0\n";
+  auto command = program.get<string>("command");
+  if (command.length() > 0) {
+    cout << "command passed: " << command << "\n";
     return 0;
   }
 
-  if (program["command"] == true) {
-    auto input = program.get<string>("command");
-    cout << "command passed: " << input << "\n";
-    return 0;
-  }
-
-  cout << "usage: " << argv[0] << " init\n";
+  cout << program;
   return 0;
 }
