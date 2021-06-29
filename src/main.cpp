@@ -24,7 +24,7 @@ int main(int, char**) {
 
   Document* doc = new Document("hola.txt");
   Change change(doc);
-  cout << "\n" << change.getObjPath();
+  //cout << "\n" << change.getObjPath();
 
   //cout << doc->getName();
 

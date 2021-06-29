@@ -2,12 +2,14 @@
 #include "file.hpp"
 #include "user.hpp"
 #include "hashgen.hpp"
+#include "change.hpp"
 #include "diffMethods.hpp"
 
 #include <chrono>
-#include <time.h>
+#include <ctime>
 #include <openssl/sha.h>
 
+using std::string;
 
 class Commit {
   //Informacion del usuario
@@ -16,9 +18,8 @@ class Commit {
   string subject;
   string sha1;
   int timestamp;
-  list<File*> changes;
+  list<Change*> changes;
 public:
-
 
   Commit(Commit* prev = nullptr, User* user = nullptr, string subject = "") 
     : prevCommit(prev), user(user), subject(subject) {
@@ -31,6 +32,18 @@ public:
   string getDiff() {
    
     DiffMeth::filediff("", "doc2.txt");
+
+    for (Change* change : changes) {
+      for (Change* prevChange : prevCommit->getChanges()) {
+        if (change->getDocPath() == prevChange->getDocPath()) {
+          DiffMeth::filediff(prevChange->getObjPath(), change->getObjPath());
+          break;
+        }
+      }
+      DiffMeth::filediff("", change->getObjPath());
+    }
+
+
     //DiffMeth::strdiff("abcdefg", "abcdefg");
     return "";
   }
@@ -51,7 +64,7 @@ public:
     return timestamp;
   }
 
-  list<File*> getChanges() {
+  list<Change*> getChanges() {
     return changes;
   }
 

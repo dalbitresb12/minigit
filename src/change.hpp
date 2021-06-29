@@ -1,3 +1,4 @@
+#pragma once
 #include "document.hpp"
 #include "repository.hpp"
 

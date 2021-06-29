@@ -35,13 +35,12 @@ public:
     //d.printUnifiedFormat();
   }
 
-  static void filediff(string fpath, string spath) {
-
+  static void filediff(fs::path fpath, fs::path spath) {
     unifiedDiff(fpath, spath);
   }
 
 private:
-  static void unifiedDiff(string fp1, string fp2) {
+  static void unifiedDiff(fs::path fp1, fs::path fp2) {
     typedef string elem; //string as Elem
     typedef vector<elem> sequence; // vector<elem> as Sequence
 
