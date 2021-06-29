@@ -1,8 +1,9 @@
 #include "document.hpp"
+#include "repository.hpp"
 
 class Change {
-  string objPath;
-  string docPath;
+  fs::path objPath;
+  fs::path docPath;
   bool isDeleted;
 public:
   Change(Document* doc = nullptr, bool isDeleted = false) {
@@ -10,43 +11,21 @@ public:
     genObjPath(doc->hash());
   }
 
-  string getObjPath() {
+  fs::path getObjPath() {
     return objPath;
   }
 
-  string getDocPath() {
+  fs::path getDocPath() {
     return docPath;
   }
 
 private:
   void genObjPath(string docHash) {
-
-
-
-    cout << (isRepository() ? "true" : "false");
-
-    if (!isRepository()) exit(1);
-
-
-
-    string newObjPath = ".minigit/objects/" + docHash.substr(0, 2);
-    if (!fs::exists(newObjPath)) fs::create_directories(newObjPath);
+    fs::path repoPath(Repository::findRepository() / "objects" / docHash.substr(0,2));
+    if (!fs::exists(repoPath)) fs::create_directories(repoPath);
     
-    objPath = newObjPath + "/" + docHash.substr(2);
-    if(!fs::exists(objPath)) fs::copy(docPath, objPath);
+    objPath = repoPath / docHash.substr(2);
+    if (!fs::exists(objPath)) fs::copy(docPath, objPath);
   }
 
-  bool isRepository() {
-    fs::path working_dir(fs::current_path());
-    fs::path rootPath(working_dir.root_name() / working_dir.root_directory());
-    while (!fs::exists(working_dir / fs::path(".minigit"))) {
-      if (rootPath == working_dir) return false;
-      else if (fs::exists(working_dir.parent_path())) {
-        working_dir = working_dir.parent_path();
-      }
-    }
-
-    cout << working_dir;
-    return true;
-  }
 };

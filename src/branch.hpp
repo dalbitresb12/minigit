@@ -2,6 +2,7 @@
 
 #include <string>
 #include "hashtable.hpp"
+#include "commit.hpp"
 
 class Branch {
   string name;
