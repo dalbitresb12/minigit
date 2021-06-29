@@ -44,6 +44,12 @@ add_executable(minigit
   "src/document.hpp"
   "src/avl.hpp"
   "src/hashtable.hpp"
+  "src/minigit.hpp"
+  "src/repository.hpp"
+  "src/stashmanager.hpp"
+  "src/stash.hpp"
+  "src/branch.hpp"
+  "src/branchmanager.hpp"
 )
 
 target_link_libraries(minigit PRIVATE argparse::argparse)

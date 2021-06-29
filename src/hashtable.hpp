@@ -1,30 +1,35 @@
 #pragma once
-#include <vector>
-#include <list>
-#include <string>
-#include <stdexcept>
-#include <functional>
 
-using namespace std;
+#include <functional>
+#include <list>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+using std::function;
+using std::list;
+using std::ostream;
+using std::string;
+using std::vector;
 
 template <class T>
-class HashTable{
+class HashTable {
 public:
-  class KeyValuePair{
+  class KeyValuePair {
     string _key;
     T _value;
   public:
-    KeyValuePair(string key, T value): _key(key), _value(value){}
-    string& key(){
+    KeyValuePair(string key, T value) : _key(key), _value(value) {}
+    string& key() {
       return _key;
     }
-    T& value(){
+    T& value() {
       return _value;
     }
   };
 
-  class NodeList{
-    std::list<KeyValuePair> items;
+  class NodeList {
+    list<KeyValuePair> items;
   public:
     void push_front(string key, T& value) {
       items.push_front(KeyValuePair(key, value));
@@ -66,7 +71,8 @@ public:
       try {
         KeyValuePair pair = findPair();
         pair.value() = value;
-      } catch (const std::invalid_argument& err) {
+      }
+      catch (const std::invalid_argument& err) {
         hashtable->table[index].push_back(key, value);
       }
       return *this;
@@ -76,7 +82,8 @@ public:
       try {
         KeyValuePair pair = findPair();
         pair.value() = value;
-      } catch (const std::invalid_argument& err) {
+      }
+      catch (const std::invalid_argument& err) {
         hashtable->table[index].push_back(key, value);
       }
       return *this;
@@ -102,7 +109,7 @@ public:
 private:
   vector<NodeList> table;
   friend class ValueProxy;
-  
+
 public:
   HashTable(size_t size) {
     table = vector<NodeList>(size);
