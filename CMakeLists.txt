@@ -37,7 +37,22 @@ include(CPack)
 
 find_package(OpenSSL REQUIRED)
 
-add_executable(minigit main.cpp "folder.hpp" "file.hpp" "document.hpp" "commit.hpp" "hashgen.hpp")
+add_executable(minigit
+  "src/main.cpp"
+  "src/file.hpp"
+  "src/folder.hpp"
+  "src/document.hpp"
+  "src/avl.hpp"
+  "src/hashtable.hpp"
+  "src/minigit.hpp"
+  "src/repository.hpp"
+  "src/stashmanager.hpp"
+  "src/stash.hpp"
+  "src/branch.hpp"
+  "src/branchmanager.hpp"
+  "src/commit.hpp"
+  "src/hashgen.hpp"
+)
   
 target_link_libraries(minigit PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 
