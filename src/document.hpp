@@ -6,6 +6,8 @@
 
 namespace fs = std::filesystem;
 using std::string;
+using std::ifstream;
+using std::istreambuf_iterator;
 
 class Document : public File {
 public:

@@ -6,28 +6,31 @@
 using std::cout;
 
 int main(int, char**) {
-  //std::cout << "Hello, world!\n";
-  //User* user = new User("FrowsyFrog", "frowsyfrog@gmail.com");
-  //Commit com(user, "Prueba");
-  //cout << com.getSha1() << endl << endl;
-
-  //cout << com.getDiff();
-
-
 
   try {
-    cout << Repository::findRepository();
+    cout << Repository::findRepository() << "\n\n";
   } catch(const std::runtime_error &err){
     cout << err.what() << "\n";
     return 1;
   }
 
-  Document* doc = new Document("hola.txt");
-  Change change(doc);
-  //cout << "\n" << change.getObjPath();
+  User* user = new User("FrowsyFrog", "frowsyfrog@gmail.com");
 
-  //cout << doc->getName();
+  Document* doc = new Document("inicio/game.h");
+  list<Change*> changes1; changes1.push_back(new Change(doc));
 
-  //delete user;
+  Commit* fCommit = new Commit(changes1,"Primer commit", user);
+
+
+  Document* doc2 = new Document("inicio/game2.h");
+  Change* newChange = new Change(doc2);
+  newChange->setDocPath("inicio/game.h");
+
+  list<Change*> changes2; changes2.push_back(newChange);
+
+  Commit* sCommit = new Commit(changes2,"Segundo commit", user, fCommit);
   
+
+  cout << sCommit->getPatch();
+  cout << sCommit->getSha1();  
 }

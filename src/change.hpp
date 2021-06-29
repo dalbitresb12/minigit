@@ -1,15 +1,28 @@
 #pragma once
 #include "document.hpp"
 #include "repository.hpp"
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 class Change {
   fs::path objPath;
   fs::path docPath;
+  string docHash;
   bool isDeleted;
 public:
   Change(Document* doc = nullptr, bool isDeleted = false) {
     docPath = doc->getPath();
-    genObjPath(doc->hash());
+    docHash = doc->hash();
+    genObjPath();
+  }
+
+  string getDocHash() {
+    return docHash;
+  }
+
+  void setDocPath(fs::path newpath) {
+    docPath = newpath;
   }
 
   fs::path getObjPath() {
@@ -21,7 +34,7 @@ public:
   }
 
 private:
-  void genObjPath(string docHash) {
+  void genObjPath() {
     fs::path repoPath(Repository::findRepository() / "objects" / docHash.substr(0,2));
     if (!fs::exists(repoPath)) fs::create_directories(repoPath);
     

@@ -11,7 +11,7 @@ public:
     SHA1((const unsigned char*)ibuf.c_str(), ibuf.length(), obuf);
 
     for (int i = 0; i < 20; ++i)
-      stream << hex << (int)obuf[i];
+      stream << std::hex << (int)obuf[i];
 
     return stream.str();
   }
