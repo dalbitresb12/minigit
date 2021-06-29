@@ -52,6 +52,9 @@ add_executable(minigit
   "src/branchmanager.hpp"
   "src/commit.hpp"
   "src/hashgen.hpp"
+  "src/user.hpp"
+  "src/diffMethods.hpp"
+  "src/change.hpp"
 )
   
 target_link_libraries(minigit PRIVATE OpenSSL::SSL OpenSSL::Crypto)

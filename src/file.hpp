@@ -15,8 +15,8 @@ protected:
   string path;
   string name;
   list<File*> versions;
-  File(string name, string path): name(name), path(path){
-    fs::create_directories(path);
+  File(string path): path(path){
+    name = pathToName(path);
   }
 public:
   bool compareName(string name) {
@@ -31,5 +31,9 @@ public:
 
   string getName() {
     return name;
+  }
+protected:
+  string pathToName(string path) {
+    return fs::path(path).filename().generic_u8string();
   }
 };

@@ -4,11 +4,11 @@
 class Folder : public File {
   list<File*> files;
 public:
-  Folder(string name, string path) : File(name, path) {}
+  Folder(string path) : File(path) {}
   File* find(string searchPath) {
     string totalPath = getTotalPath(path, searchPath);
     if (fs::exists(totalPath)) {
-      string fileName = fs::path(totalPath).filename().generic_u8string();
+      string fileName = pathToName(totalPath);
       // FALTA REEMPLAZAR LA BUSQUEDA FOR POR UNA DE ARBOLES
       for (File* file : files) {
         if (file->compareName(fileName)) return file;

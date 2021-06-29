@@ -5,7 +5,7 @@
 
 class Document : public File {
 public:
-  Document(string name, string path) : File(name, path) {}
+  Document(string path) : File(path) {}
 
   string getExt() {
     fs::path filePath = fs::path(path);

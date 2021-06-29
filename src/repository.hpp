@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <filesystem>
 
 #include "file.hpp"
 #include "branch.hpp"
@@ -10,6 +11,7 @@
 
   using std::string;
   using std::vector;
+  namespace fs = std::filesystem;
 
 class Repository {
   Branch* branch;
@@ -36,4 +38,6 @@ public:
   void branch(string name);
   void checkout(string name, bool create = true);
   void merge(string name);
+
+  static fs::p
 };
