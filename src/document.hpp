@@ -2,10 +2,14 @@
 #include "file.hpp"
 #include "hashgen.hpp"
 #include <fstream>
+#include <filesystem>
+
+namespace fs = std::filesystem;
+using std::string;
 
 class Document : public File {
 public:
-  Document(string path) : File(path) {}
+  Document(fs::path path) : File(path) {}
 
   string getExt() {
     fs::path filePath = fs::path(path);

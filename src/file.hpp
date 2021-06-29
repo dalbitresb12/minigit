@@ -2,8 +2,10 @@
 #include <list>
 #include <string>
 #include <filesystem>
+
 namespace fs = std::filesystem;
-using namespace std;
+using std::string;
+using std::list;
 
 enum class FileType {
   Document,
@@ -12,28 +14,26 @@ enum class FileType {
 
 class File {
 protected:
-  string path;
-  string name;
+  fs::path path;
+  fs::path name;
   list<File*> versions;
-  File(string path): path(path){
-    name = pathToName(path);
+
+  File(fs::path path) : path(path) {
+    name = path.filename();
   }
+
 public:
-  bool compareName(string name) {
+  bool compareName(fs::path name) {
     return this->name == name;
   }
 
   virtual FileType getFileType() = 0;
 
-  string getPath() {
+  fs::path getPath() {
     return path;
   }
 
-  string getName() {
+  fs::path getName() {
     return name;
-  }
-protected:
-  string pathToName(string path) {
-    return fs::path(path).filename().generic_u8string();
   }
 };
