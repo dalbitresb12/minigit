@@ -16,13 +16,19 @@ using std::vector;
 
 class Repository {
   Branch* currentBranch;
-  StashManager* stashmanager;
-  BranchManager* branchmanager;
+  StashManager* stashManager;
+  BranchManager* branchManager;
   static inline fs::path repositoryPath;
 
 public:
-  Repository();
-  ~Repository();
+  Repository() {
+    
+  };
+  ~Repository() {
+    if (currentBranch != nullptr) delete currentBranch;
+    if (stashManager != nullptr) delete stashManager;
+    if (branchManager != nullptr) delete branchManager;
+  };
   void status();
   void add(vector<File*> files);
   void reset(vector<File*> files);
@@ -48,7 +54,7 @@ public:
     fs::path rootPath(workingDir.root_name() / workingDir.root_directory());
     while (!fs::exists(workingDir / ".minigit")) {
       if (rootPath == workingDir) {
-        throw std::runtime_error("No repository was found in parent directories.");
+        throw std::runtime_error("fatal: not a git repository (or any of the parent directories): .minigit");
       } else if (fs::exists(workingDir.parent_path())) {
         workingDir = workingDir.parent_path();
       }

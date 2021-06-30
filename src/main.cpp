@@ -12,7 +12,7 @@ using argparse::ArgumentParser;
 
 int main(int argc, char** argv) {
   try {
-    cout << Repository::findRepository() << "\n\n";
+    Repository::findRepository();
   } catch (const std::runtime_error& err) {
     cout << err.what() << "\n";
     return 1;
