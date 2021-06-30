@@ -1,13 +1,24 @@
-#include <file.hpp>
+#pragma once
+
+#include <filesystem>
+#include <string>
+
+#include "file.hpp"
+
+namespace fs = std::filesystem;
+using std::string;
+using std::list;
 
 class Folder : public File {
   list<File*> files;
+
 public:
-  Folder(string name, string path) : File(name, path) {}
-  File* find(string searchPath) {
-    string totalPath = getTotalPath(path, searchPath);
+  Folder(fs::path path) : File(path) {}
+
+  File* find(fs::path searchPath) {
+    fs::path totalPath = getTotalPath(path, searchPath);
     if (fs::exists(totalPath)) {
-      string fileName = fs::path(totalPath).filename().generic_u8string();
+      fs::path fileName = totalPath.filename();
       // FALTA REEMPLAZAR LA BUSQUEDA FOR POR UNA DE ARBOLES
       for (File* file : files) {
         if (file->compareName(fileName)) return file;
@@ -16,7 +27,7 @@ public:
     return nullptr;
   }
 
-  bool contains(string name) {
+  bool contains(fs::path name) {
     if (compareName(name)) return true;
     // FALTA REEMPLAZAR LA BUSQUEDA FOR POR UNA DE ARBOLES
     for (File* file : files) {
@@ -33,8 +44,8 @@ public:
     return FileType::Folder;
   }
 private:
-  string getTotalPath(string initialPath, string searchPath) {
-    return initialPath + "/" + searchPath;
+  fs::path getTotalPath(fs::path initialPath, fs::path searchPath) {
+    return initialPath / searchPath;
   }
 };
 
