@@ -24,18 +24,21 @@ int main(int argc, char** argv) {
   program.add_argument<string>("option1")
     .default_value<string>("")
     .help("First parameter of command");
-
-  if (argc == 1) {
-    string help = program.help().str();
-    fmt::print(help);
-    return 0;
-  }
+  program.add_argument<string>("--help", "-h")
+    .default_value(false)
+    .implicit_value(true)
+    .help("Shows help message and exits");
 
   try {
     program.parse_args(argc, argv);
   } catch (const std::exception& err) {
     fmt::print("{}\n", err.what());
     return 1;
+  }
+
+  if (program["--help"] == true) {
+    Minigit::help();
+    return 0;
   }
 
   string command = program.get<string>("command");
@@ -76,8 +79,7 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  string help = program.help().str();
-  fmt::print(help);
+  Minigit::help();
   return 0;
 
   // User* user = new User("TestingUser", "testinguser@example.com");
