@@ -1,142 +1,122 @@
 #pragma once
-#include "file.hpp"
-#include "user.hpp"
-#include "hashgen.hpp"
-#include "change.hpp"
-#include "diffMethods.hpp"
 
 #include <fstream>
 #include <chrono>
 #include <ctime>
 #include <openssl/sha.h>
+#include <fmt/core.h>
+#include <fmt/chrono.h>
+
+#include "file.hpp"
+#include "user.hpp"
+#include "hashgen.hpp"
+#include "change.hpp"
+#include "diffUtils.hpp"
 
 namespace chrono = std::chrono;
 using std::fstream;
 using std::string;
-using std::cout;
 
 class Commit {
-  //Informacion del usuario
-  Commit* prevCommit;
+  Commit* parent;
   User* user;
   string subject;
-  string sha1;
+  string hash;
   int timestamp;
   list<Change*> changes;
-public:
 
-  Commit(list<Change*> changes, string subject = "",User* user = nullptr, Commit* prev = nullptr)
-    : changes(changes), subject(subject), prevCommit(prev), user(user) {
-    //list<File*> stagingFiles
-    //changes = stagingFiles;
-    timestamp = generateTimestamp();
+public:
+  Commit(list<Change*> changes, string subject = "", User* user = nullptr, Commit* parent = nullptr)
+    : changes(changes), subject(subject), parent(parent), user(user) {
+    timestamp = createTimestamp();
     string patch = getPatch();
-    sha1 = HashGenerator::hash(patch);
-    genCommitPath(patch);
+    hash = HashGenerator::hash(patch);
+    writeCommit(patch);
   }
 
   string getPatch() {
-    string patch;
-    patch = getCommitInfo() + "\n";
+    string patch = createCommitHeader();
 
-    if (prevCommit != nullptr) {
+    if (parent != nullptr) {
       for (Change* change : changes) {
-        bool wasBroken = false;
-        for (Change* prevChange : prevCommit->getChanges()) {
+        bool didBreak = false;
+        for (Change* prevChange : parent->changes) {
           if (change->getDocPath() == prevChange->getDocPath()) {
-            patch += genHeaderPatch(prevChange, change) +
-              DiffMeth::unifiedDiff(prevChange->getObjPath(), change->getObjPath());
-            wasBroken = true;
+            patch += createPatchHeader(prevChange, change) +
+              DiffUtils::unified(prevChange->getObjPath(), change->getObjPath());
+            didBreak = true;
             break;
           }
         }
-        if (wasBroken) continue;
-        patch += genHeaderPatch(change, change) + 
-          DiffMeth::unifiedDiff("", change->getObjPath());
+        if (didBreak) continue;
+        patch += createPatchHeader(change, change) +
+          DiffUtils::unified("", change->getObjPath());
       }
-    } else {
-      for (Change* change : changes) {
-        patch += genHeaderPatch(change, change) +
-          DiffMeth::unifiedDiff("", change->getObjPath());
-      }
+      return patch;
+    }
+
+    for (Change* change : changes) {
+      patch += createPatchHeader(change, change) +
+        DiffUtils::unified("", change->getObjPath());
     }
     return patch;
   }
 
-  string getSha1() {
-    return sha1;
-  }
-
-  string getDate() {
-    return epochConverter(getTimestamp());
-  }
-
-  string getSubject() {
-    return subject;
-  }
-
-  int getTimestamp() {
-    return timestamp;
-  }
-
-  list<Change*> getChanges() {
-    return changes;
-  }
-
-  User* getUser() {
-    return user;
+  string getHash() {
+    return hash;
   }
 
 private:
-
-  string genHeaderPatch(Change* fchange, Change* schange) {
-    string headerPatch;
-
-    string strDocPathA = "a/" + fchange->getDocPath().generic_u8string();
-    string strDocPathB = "b/" + schange->getDocPath().generic_u8string();
-
-    headerPatch += "diff " + strDocPathA + " " + strDocPathB + "\n";
-    headerPatch += indexComparer(fchange, schange);
-
-
-    if (fchange != schange) headerPatch += "--- " + strDocPathA + "\n";
-    else headerPatch += "--- /dev/null\n";
-    headerPatch +=  "+++ " + strDocPathB + "\n";
-
-    return headerPatch;
+  string createCommitHeader() {
+    string header;
+    if (parent != nullptr)
+      header += fmt::format("Parent: {}\n", parent->hash);
+    if (user != nullptr)
+      header += fmt::format("From: {} <{}>\n", user->getName(), user->getEmail());
+    header += fmt::format("Date: {}\n", createDateTime());
+    header += fmt::format("Subject: [PATCH] {}\n", subject);
+    return header + "\n---\n";
   }
 
-  string indexComparer(Change* fchange, Change* schange) {
+  string createPatchHeader(Change* prev, Change* current) {
+    string header;
+    fs::path prevPath = createPathChange("a", prev);
+    fs::path nextPath = createPathChange("b", current);
+
+    header += fmt::format("diff {} {}\n", prevPath.generic_u8string(), nextPath.generic_u8string());
+    header += createIndexComparer(prev, current);
+    if (prev != current) header += fmt::format("--- {}\n", prevPath.generic_u8string());
+    else header += "--- /dev/null\n";
+    header += fmt::format("+++ {}\n", nextPath.generic_u8string());
+    return header;
+  }
+
+  fs::path createPathChange(string prefix, Change* change) {
+    return fs::path(prefix) / change->getDocPath();
+  }
+
+  string createIndexComparer(Change* fchange, Change* schange) {
     string indexA = fchange->getDocHash().substr(0, 7);
     string indexB = schange->getDocHash().substr(0, 7);
 
     if (indexA == indexB) indexA = "0000000";
-    return "index " + indexA  + ".." +  indexB + "\n";
+    return fmt::format("index {}..{}\n", indexA, indexB);
   }
 
-  int generateTimestamp() {
-    const auto timeNow = chrono::system_clock::now();
-    return chrono::duration_cast<chrono::seconds>(timeNow.time_since_epoch()).count();
+  int createTimestamp() {
+    const auto now = chrono::system_clock::now();
+    return chrono::duration_cast<chrono::seconds>(now.time_since_epoch()).count();
   }
 
-  string getCommitInfo() {
-    string commitInfo = "";
-    
-    if (user != nullptr) commitInfo += "From: " + user->getName() + " <" + user->getMail() + ">\n";
-    commitInfo += "Date: " + epochConverter(getTimestamp()) + "Subject: " + subject + "\n\n---";
-    return commitInfo;
+  string createDateTime() {
+    time_t raw = timestamp;
+    return fmt::format("{:%a, %e %b %Y %T %z}", fmt::localtime(raw));
   }
 
-  string epochConverter(int unixEpochTime) {
-    time_t rawTime = unixEpochTime;
-    return ctime(&rawTime);
-  }
-  
-  void genCommitPath(string patch) {
-    fs::path repoPath(Repository::findRepository() / "temp" / sha1.substr(0, 2));
-    if (!fs::exists(repoPath)) fs::create_directories(repoPath);
-    fstream commitFile(repoPath / sha1.substr(2), std::ios::out|std::ios::binary);
-    commitFile << patch;
-    
+  void writeCommit(string patch) {
+    fs::path path(Repository::findRepository() / "objects" / hash.substr(0, 2));
+    if (!fs::exists(path)) fs::create_directories(path);
+    fstream file(path / hash.substr(2), std::ios::out | std::ios::binary);
+    file << patch;
   }
 };

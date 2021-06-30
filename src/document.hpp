@@ -1,8 +1,11 @@
 #pragma once
-#include "file.hpp"
-#include "hashgen.hpp"
+
+#include <string>
 #include <fstream>
 #include <filesystem>
+
+#include "file.hpp"
+#include "hashgen.hpp"
 
 namespace fs = std::filesystem;
 using std::string;
@@ -10,8 +13,11 @@ using std::ifstream;
 using std::istreambuf_iterator;
 
 class Document : public File {
+  string* content;
+  list<File*> versions;
+
 public:
-  Document(fs::path path) : File(path) {}
+  Document(fs::path path) : File(path), content(nullptr) {}
 
   string getExt() {
     fs::path filePath = fs::path(path);
@@ -19,7 +25,8 @@ public:
   }
 
   string hash() {
-    return HashGenerator::hash(getDocContent());
+    string* content = getContent();
+    return HashGenerator::hash(content);
   }
 
   FileType getFileType() override {
@@ -27,9 +34,13 @@ public:
   }
 
 private:
-  string getDocContent() {
+  string* getContent() {
+    if (content != nullptr) {
+      return content;
+    }
+
     ifstream file(path);
-    return string(istreambuf_iterator<char>(file),istreambuf_iterator<char>());
+    return new string(istreambuf_iterator<char>(file), istreambuf_iterator<char>());
   }
 };
 

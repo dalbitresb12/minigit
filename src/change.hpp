@@ -1,45 +1,47 @@
 #pragma once
+
+#include <filesystem>
+
 #include "document.hpp"
 #include "repository.hpp"
-#include <filesystem>
 
 namespace fs = std::filesystem;
 
 class Change {
-  fs::path objPath;
-  fs::path docPath;
-  string docHash;
+  fs::path objectPath;
+  fs::path documentPath;
+  string documentHash;
   bool isDeleted;
 public:
-  Change(Document* doc = nullptr, bool isDeleted = false) {
-    docPath = doc->getPath();
-    docHash = doc->hash();
-    genObjPath();
+  Change(Document* document = nullptr, bool isDeleted = false) {
+    documentPath = document->getPath();
+    documentHash = document->hash();
+    writeObject();
   }
 
   string getDocHash() {
-    return docHash;
+    return documentHash;
   }
 
   void setDocPath(fs::path newpath) {
-    docPath = newpath;
+    documentPath = newpath;
   }
 
   fs::path getObjPath() {
-    return objPath;
+    return objectPath;
   }
 
   fs::path getDocPath() {
-    return docPath;
+    return documentPath;
   }
 
 private:
-  void genObjPath() {
-    fs::path repoPath(Repository::findRepository() / "objects" / docHash.substr(0,2));
-    if (!fs::exists(repoPath)) fs::create_directories(repoPath);
-    
-    objPath = repoPath / docHash.substr(2);
-    if (!fs::exists(objPath)) fs::copy(docPath, objPath);
+  void writeObject() {
+    fs::path path = Repository::findRepository() / "objects" / documentHash.substr(0, 2);
+    if (!fs::exists(path))
+      fs::create_directories(path);
+    objectPath = path / documentHash.substr(2);
+    if (!fs::exists(objectPath))
+      fs::copy(documentPath, objectPath);
   }
-
 };

@@ -19,6 +19,7 @@ class Repository {
   StashManager* stashmanager;
   BranchManager* branchmanager;
   static inline fs::path repositoryPath;
+
 public:
   Repository();
   ~Repository();
@@ -41,21 +42,19 @@ public:
   void merge(string name);
 
   static fs::path findRepository() {
-   if (!repositoryPath.empty()) return repositoryPath;
-   
-   fs::path working_dir(fs::current_path());
-   fs::path rootPath(working_dir.root_name() / working_dir.root_directory());
-   while (!fs::exists(working_dir / fs::path(".minigit"))) {
-     if (rootPath == working_dir) {
-       throw std::runtime_error("No repository was found in parent directories.");
-     }
-     else if (fs::exists(working_dir.parent_path())) {
-       working_dir = working_dir.parent_path();
-     }
-   }
+    if (!repositoryPath.empty()) return repositoryPath;
 
-   working_dir /= ".minigit";
-   repositoryPath = working_dir;
-   return working_dir;
+    fs::path workingDir(fs::current_path());
+    fs::path rootPath(workingDir.root_name() / workingDir.root_directory());
+    while (!fs::exists(workingDir / ".minigit")) {
+      if (rootPath == workingDir) {
+        throw std::runtime_error("No repository was found in parent directories.");
+      } else if (fs::exists(workingDir.parent_path())) {
+        workingDir = workingDir.parent_path();
+      }
+    }
+    workingDir /= ".minigit";
+    repositoryPath = workingDir;
+    return workingDir;
   }
 };

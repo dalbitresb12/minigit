@@ -1,6 +1,8 @@
 #pragma once
+
 #include <filesystem>
 #include <string>
+
 #include "file.hpp"
 
 namespace fs = std::filesystem;
@@ -9,6 +11,7 @@ using std::list;
 
 class Folder : public File {
   list<File*> files;
+
 public:
   Folder(fs::path path) : File(path) {}
 

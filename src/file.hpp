@@ -1,4 +1,5 @@
 #pragma once
+
 #include <list>
 #include <string>
 #include <filesystem>
@@ -16,7 +17,6 @@ class File {
 protected:
   fs::path path;
   fs::path name;
-  list<File*> versions;
 
   File(fs::path path) : path(path) {
     name = path.filename();

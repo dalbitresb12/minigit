@@ -1,28 +1,21 @@
 #pragma once
+
 #include <string>
 
 using std::string;
 
 class User {
   string name;
-  string mail;
+  string email;
 public:
-  User(string n, string m): name(n), mail(m){}
+  User(string name, string email)
+    : name(name), email(email) {}
 
   string getName() {
     return name;
   }
 
-  string getMail() {
-    return mail;
+  string getEmail() {
+    return email;
   }
-
-  void setName(string n) {
-    name = n;
-  }
-
-  void setMail(string m) {
-    mail = m;
-  }
-
 };

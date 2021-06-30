@@ -36,6 +36,7 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
 find_package(OpenSSL REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 add_executable(minigit
   "src/main.cpp"
@@ -53,11 +54,12 @@ add_executable(minigit
   "src/commit.hpp"
   "src/hashgen.hpp"
   "src/user.hpp"
-  "src/diffMethods.hpp"
+  "src/diffUtils.hpp"
   "src/change.hpp"
 )
   
 target_link_libraries(minigit PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(minigit PRIVATE fmt::fmt)
 
 include(CTest)
 enable_testing()
