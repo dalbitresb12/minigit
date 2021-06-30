@@ -1,10 +1,9 @@
 {
   "files.associations": {
     "CMakeLists.txt": "cmake",
-    "*.json.example": "jsonc",
-    "iostream": "cpp"
+    "*.json.example": "jsonc"
   },
   "cmake.debugConfig": {
-    "cwd": "${workspaceFolder}"
+    "cwd": "${workspaceFolder}/tests"
   }
 }
