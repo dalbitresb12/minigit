@@ -15,5 +15,5 @@ class Stash {
 public:
   Stash();
   ~Stash();
-  string getDiff();
+  string getPatch();
 };

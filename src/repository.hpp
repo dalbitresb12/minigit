@@ -2,19 +2,23 @@
 
 #include <string>
 #include <vector>
+#include <filesystem>
+#include <stdexcept>
 
 #include "file.hpp"
 #include "branch.hpp"
 #include "branchmanager.hpp"
 #include "stashmanager.hpp"
 
-  using std::string;
-  using std::vector;
+namespace fs = std::filesystem;
+using std::string;
+using std::vector;
 
 class Repository {
-  Branch* branch;
+  Branch* currentBranch;
   StashManager* stashmanager;
   BranchManager* branchmanager;
+  static inline fs::path repositoryPath;
 
 public:
   Repository();
@@ -26,7 +30,7 @@ public:
   void diff(string from, string to);
   void commit(string msg);
   void log();
-  void log(strin from, string to);
+  void log(string from, string to);
   void hash(string path);
   void show(string hash);
   void rm(string path);
@@ -36,4 +40,21 @@ public:
   void branch(string name);
   void checkout(string name, bool create = true);
   void merge(string name);
+
+  static fs::path findRepository() {
+    if (!repositoryPath.empty()) return repositoryPath;
+
+    fs::path workingDir(fs::current_path());
+    fs::path rootPath(workingDir.root_name() / workingDir.root_directory());
+    while (!fs::exists(workingDir / ".minigit")) {
+      if (rootPath == workingDir) {
+        throw std::runtime_error("No repository was found in parent directories.");
+      } else if (fs::exists(workingDir.parent_path())) {
+        workingDir = workingDir.parent_path();
+      }
+    }
+    workingDir /= ".minigit";
+    repositoryPath = workingDir;
+    return workingDir;
+  }
 };
