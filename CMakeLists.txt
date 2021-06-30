@@ -35,6 +35,7 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
+find_package(argparse CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
@@ -56,8 +57,10 @@ add_executable(minigit
   "src/user.hpp"
   "src/diffUtils.hpp"
   "src/change.hpp"
+  "src/repositoryfinder.hpp"
 )
   
+target_link_libraries(minigit PRIVATE argparse::argparse)
 target_link_libraries(minigit PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 target_link_libraries(minigit PRIVATE fmt::fmt)
 

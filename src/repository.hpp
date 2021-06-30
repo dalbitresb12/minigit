@@ -4,25 +4,39 @@
 #include <vector>
 #include <filesystem>
 #include <stdexcept>
+#include <fstream>
+#include <fmt/core.h>
+#include <argparse/argparse.hpp>
 
 #include "file.hpp"
-#include "branch.hpp"
-#include "branchmanager.hpp"
-#include "stashmanager.hpp"
+#include "hashtable.hpp"
+#include "commit.hpp"
+#include "repositoryfinder.hpp"
 
 namespace fs = std::filesystem;
 using std::string;
 using std::vector;
+using std::fstream;
+using std::ios;
+using argparse::ArgumentParser;
 
 class Repository {
-  Branch* currentBranch;
-  StashManager* stashmanager;
-  BranchManager* branchmanager;
-  static inline fs::path repositoryPath;
+  Commit* head;
+  HashTable<Commit*> commits;
 
 public:
-  Repository();
-  ~Repository();
+  Repository(string ref) : commits(HashTable<Commit*>(30)) {
+    fs::path refPath = RepositoryFinder::findRepository() / "refs/heads" / ref;
+    if (!fs::exists(refPath)) {
+      string err = fmt::format("fatal: cannot find the ref '{}'.", ref);
+      throw std::invalid_argument(err);
+    }
+    string refHash;
+    fstream refFile(refPath, ios::in);
+    refFile >> refHash;
+    head = new Commit(refHash);
+  };
+  void handleCommand(ArgumentParser& program, string command) {}
   void status();
   void add(vector<File*> files);
   void reset(vector<File*> files);
@@ -31,30 +45,7 @@ public:
   void commit(string msg);
   void log();
   void log(string from, string to);
-  void hash(string path);
   void show(string hash);
   void rm(string path);
   void mv(string from, string to);
-  StashManager* stash();
-  void branch();
-  void branch(string name);
-  void checkout(string name, bool create = true);
-  void merge(string name);
-
-  static fs::path findRepository() {
-    if (!repositoryPath.empty()) return repositoryPath;
-
-    fs::path workingDir(fs::current_path());
-    fs::path rootPath(workingDir.root_name() / workingDir.root_directory());
-    while (!fs::exists(workingDir / ".minigit")) {
-      if (rootPath == workingDir) {
-        throw std::runtime_error("No repository was found in parent directories.");
-      } else if (fs::exists(workingDir.parent_path())) {
-        workingDir = workingDir.parent_path();
-      }
-    }
-    workingDir /= ".minigit";
-    repositoryPath = workingDir;
-    return workingDir;
-  }
 };

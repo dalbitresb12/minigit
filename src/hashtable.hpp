@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+using std::size_t;
 using std::function;
 using std::list;
 using std::ostream;
@@ -27,7 +28,6 @@ public:
       return _value;
     }
   };
-
   class NodeList {
     list<KeyValuePair> items;
   public:
