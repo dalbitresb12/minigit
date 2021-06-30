@@ -18,6 +18,10 @@ class Document : public File {
 
 public:
   Document(fs::path path) : File(path), content(nullptr) {}
+  ~Document() {
+    if (content != nullptr)
+      delete content;
+  }
 
   string getExt() {
     fs::path filePath = fs::path(path);
@@ -33,7 +37,6 @@ public:
     return FileType::Document;
   }
 
-private:
   string* getContent() {
     if (content != nullptr) {
       return content;

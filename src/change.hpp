@@ -3,7 +3,7 @@
 #include <filesystem>
 
 #include "document.hpp"
-#include "repository.hpp"
+#include "repositoryfinder.hpp"
 
 namespace fs = std::filesystem;
 
@@ -37,7 +37,7 @@ public:
 
 private:
   void writeObject() {
-    fs::path path = Repository::findRepository() / "objects" / documentHash.substr(0, 2);
+    fs::path path = RepositoryFinder::findRepository() / "objects" / documentHash.substr(0, 2);
     if (!fs::exists(path))
       fs::create_directories(path);
     objectPath = path / documentHash.substr(2);

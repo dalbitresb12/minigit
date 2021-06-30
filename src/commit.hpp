@@ -12,6 +12,7 @@
 #include "hashgen.hpp"
 #include "change.hpp"
 #include "diffUtils.hpp"
+#include "repositoryfinder.hpp"
 
 namespace chrono = std::chrono;
 using std::fstream;
@@ -26,6 +27,10 @@ class Commit {
   list<Change*> changes;
 
 public:
+  Commit(string hash) {
+    
+  }
+
   Commit(list<Change*> changes, string subject = "", User* user = nullptr, Commit* parent = nullptr)
     : changes(changes), subject(subject), parent(parent), user(user) {
     timestamp = createTimestamp();
@@ -114,7 +119,7 @@ private:
   }
 
   void writeCommit(string patch) {
-    fs::path path(Repository::findRepository() / "objects" / hash.substr(0, 2));
+    fs::path path(RepositoryFinder::findRepository() / "objects" / hash.substr(0, 2));
     if (!fs::exists(path)) fs::create_directories(path);
     fstream file(path / hash.substr(2), std::ios::out | std::ios::binary);
     file << patch;

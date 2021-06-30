@@ -57,6 +57,7 @@ add_executable(minigit
   "src/user.hpp"
   "src/diffUtils.hpp"
   "src/change.hpp"
+  "src/repositoryfinder.hpp"
 )
   
 target_link_libraries(minigit PRIVATE argparse::argparse)
